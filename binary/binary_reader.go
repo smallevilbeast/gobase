@@ -59,7 +59,19 @@ func (br *BinaryReader) ReadUint64(littleEndian ...bool) (uint64, error) {
 	return value, err
 }
 
-func (br *BinaryReader) ReadUvarint() (uint64, error) {
+func (br *BinaryReader) ReadUvarint32() (uint32, error) {
+	value, err := br.ReadUvarint64()
+	if err != nil {
+		return 0, err
+	}
+
+	if value>>32 != 0 {
+		return 0, errors.New("is 64 bit")
+	}
+	return uint32(value), err
+}
+
+func (br *BinaryReader) ReadUvarint64() (uint64, error) {
 	return binary.ReadUvarint(br.reader)
 }
 

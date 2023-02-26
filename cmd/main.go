@@ -22,7 +22,7 @@ func testBinaryReader() {
 	r := binary.NewBinaryReader(buf)
 	u8, _ := r.ReadUint8()
 	u16, _ := r.ReadUint16()
-	uvarint, _ := r.ReadUvarint()
+	uvarint, _ := r.ReadUvarint32()
 	end, _ := r.ReadToEnd()
 	fmt.Printf("u8: 0x%x, u16: 0x%x, varint: %d, end: %s\n", u8, u16, uvarint, hex.EncodeToString(end))
 }
