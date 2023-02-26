@@ -8,68 +8,57 @@ import (
 )
 
 type BinaryWriter struct {
-	w bytes.Buffer
+	writer *bytes.Buffer
 }
 
 func NewBinaryWriter() *BinaryWriter {
-	return &BinaryWriter{}
+	return &BinaryWriter{
+		writer: bytes.NewBuffer([]byte{}),
+	}
+}
+
+func (bw *BinaryWriter) writeNumber(data any, littleEndian ...bool) error {
+	var order binary.ByteOrder
+	if len(littleEndian) > 0 && littleEndian[0] {
+		order = binary.LittleEndian
+	} else {
+		order = binary.BigEndian
+	}
+	return binary.Write(bw.writer, order, data)
 }
 
 func (bw *BinaryWriter) WriteUint8(value uint8) error {
-	buf := []byte{value}
-	_, err := bw.w.Write(buf)
-	return err
+	return bw.writeNumber(&value, true)
 }
 
 func (bw *BinaryWriter) WriteUint16(value uint16, littleEndian ...bool) error {
-	buf := make([]byte, 2)
-	if len(littleEndian) > 0 && littleEndian[0] {
-		binary.LittleEndian.PutUint16(buf, value)
-	} else {
-		binary.BigEndian.PutUint16(buf, value)
-	}
-	_, err := bw.w.Write(buf)
-	return err
+	return bw.writeNumber(&value, littleEndian...)
 }
 
 func (bw *BinaryWriter) WriteUint32(value uint32, littleEndian ...bool) error {
-	buf := make([]byte, 4)
-	if len(littleEndian) > 0 && littleEndian[0] {
-		binary.LittleEndian.PutUint32(buf, value)
-	} else {
-		binary.BigEndian.PutUint32(buf, value)
-	}
-	_, err := bw.w.Write(buf)
-	return err
+	return bw.writeNumber(&value, littleEndian...)
 }
 
 func (bw *BinaryWriter) WriteUint64(value uint64, littleEndian ...bool) error {
-	buf := make([]byte, 8)
-	if len(littleEndian) > 0 && littleEndian[0] {
-		binary.LittleEndian.PutUint64(buf, value)
-	} else {
-		binary.BigEndian.PutUint64(buf, value)
-	}
-	_, err := bw.w.Write(buf)
-	return err
+	return bw.writeNumber(&value, littleEndian...)
 }
 
-func (bw *BinaryWriter) WriteVarint32(value int32) error {
+func (bw *BinaryWriter) WriteUvarint32(value uint32) error {
 	buf := make([]byte, binary.MaxVarintLen32)
-	n := binary.PutVarint(buf, int64(value))
-	_, err := bw.w.Write(buf[:n])
+	n := binary.PutUvarint(buf, uint64(value))
+	_, err := bw.writer.Write(buf[:n])
 	return err
 }
 
-func (bw *BinaryWriter) WriteVarint64(value int64) error {
+func (bw *BinaryWriter) WriteUvarint64(value uint64) error {
 	buf := make([]byte, binary.MaxVarintLen64)
-	n := binary.PutVarint(buf, value)
-	_, err := bw.w.Write(buf[:n])
+	n := binary.PutUvarint(buf, value)
+	_, err := bw.writer.Write(buf[:n])
 	return err
 }
 
 func (bw *BinaryWriter) WriteBytes(value []byte) error {
-	_, err := bw.w.Write(value)
+	_, err := bw.writer.Write(value)
 	return err
 }
 
@@ -79,14 +68,14 @@ func (bw *BinaryWriter) WriteHex(hexValue string) error {
 	if err != nil {
 		return err
 	}
-	_, err = bw.w.Write(value)
+	_, err = bw.writer.Write(value)
 	return err
 }
 
 func (bw *BinaryWriter) Size() int {
-	return bw.w.Len()
+	return bw.writer.Len()
 }
 
 func (bw *BinaryWriter) ToBytes() []byte {
-	return bw.w.Bytes()
+	return bw.writer.Bytes()
 }
