@@ -39,9 +39,15 @@ func testAesCbcCrypto() {
 	fmt.Printf("plainText: %s\n", string(newPlainText))
 }
 
-func main() {
-	testBinaryWriter()
-	testBinaryReader()
+func testEcdhKey() {
+	ecdh := crypto.NewEcdhKeyP256()
+	key, _ := ecdh.GetPublicKey()
+	fmt.Println(hex.EncodeToString(key))
+	peerKey, _ := hex.DecodeString("04ce7827f9014801097e7d86761f97cf74ba5ceeca8871ee35008af981ca199a10d08638bc28ee7d311917bbb934a631a40233b4011ad13f895c689ea46edb0298")
+	out, _ := ecdh.ComputeDh(peerKey, crypto.KDFTypeSHA256)
+	fmt.Println(hex.EncodeToString(out))
+}
 
-	testAesCbcCrypto()
+func main() {
+	testEcdhKey()
 }
