@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/smallevilbeast/gobase/binary"
+	"github.com/smallevilbeast/gobase/crypto"
 )
 
 func testBinaryWriter() {
@@ -27,7 +28,20 @@ func testBinaryReader() {
 	fmt.Printf("u8: 0x%x, u16: 0x%x, varint: %d, end: %s\n", u8, u16, uvarint, hex.EncodeToString(end))
 }
 
+func testAesCbcCrypto() {
+	aes := crypto.NewAesCBCPKCS5()
+	key := []byte("0123456789abcdef")
+	plainText := []byte("0123456789abcdef")
+	cipherText, _ := aes.Encrypt(plainText, key, key)
+	fmt.Printf("cipherText: %s\n", hex.EncodeToString(cipherText))
+
+	newPlainText, _ := aes.Decrypt(cipherText, key, key)
+	fmt.Printf("plainText: %s\n", string(newPlainText))
+}
+
 func main() {
 	testBinaryWriter()
 	testBinaryReader()
+
+	testAesCbcCrypto()
 }
