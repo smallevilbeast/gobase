@@ -48,6 +48,14 @@ func testEcdhKey() {
 	fmt.Println(hex.EncodeToString(out))
 }
 
+func testAesEcbEncrypt() {
+	pt := []byte("Some11111111111111111111111111111111111")
+	key := []byte("0123456789abcdef")
+	aes := crypto.NewAesECBPKCS7()
+	cipherText, err := aes.Encrypt(pt, key)
+	fmt.Println(err)
+	fmt.Println(hex.EncodeToString(cipherText))
+}
 func main() {
-	testEcdhKey()
+	testAesEcbEncrypt()
 }

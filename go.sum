@@ -1,2 +1,4 @@
+github.com/andreburgaud/crypt2go v1.2.0 h1:oly/ENAodeqTYpUafgd4r3v+VKLQnmOKUyfpj+TxHbE=
+github.com/andreburgaud/crypt2go v1.2.0/go.mod h1:kKRqlrX/3Q9Ki7HdUsoh0cX1Urq14/Hcta4l4VrIXrI=
 golang.org/x/crypto v0.6.0 h1:qfktjS5LUO+fFKeJXZ+ikTRijMmljikvG68fpMMruSc=
 golang.org/x/crypto v0.6.0/go.mod h1:OFC/31mSvZgRz0V1QTNCzfAI1aIRzbiufJtkMIlEp58=
