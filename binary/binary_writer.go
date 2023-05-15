@@ -79,3 +79,31 @@ func (bw *BinaryWriter) Size() int {
 func (bw *BinaryWriter) ToBytes() []byte {
 	return bw.writer.Bytes()
 }
+
+func (bw *BinaryWriter) ToUint32Bytes() ([]byte, error) {
+	w := NewBinaryWriter()
+	data := bw.ToBytes()
+	err := w.WriteUint32(uint32(len(data)))
+	if err != nil {
+		return nil, err
+	}
+	err = w.WriteBytes(data)
+	if err != nil {
+		return nil, err
+	}
+	return w.ToBytes(), nil
+}
+
+func (bw *BinaryWriter) ToUint16Bytes() ([]byte, error) {
+	w := NewBinaryWriter()
+	data := bw.ToBytes()
+	err := w.WriteUint16(uint16(len(data)))
+	if err != nil {
+		return nil, err
+	}
+	err = w.WriteBytes(data)
+	if err != nil {
+		return nil, err
+	}
+	return w.ToBytes(), nil
+}
